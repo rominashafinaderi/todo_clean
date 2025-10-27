@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:todo_app/0_data/datasources/Remote/todo_remote_datasource.dart';
 import 'package:todo_app/0_data/repositories/todo_repo_impl.dart';
 import 'package:todo_app/1_domain/repositories/todo_repo.dart';
-import 'package:todo_app/1_domain/usecases/todo_usecase.dart';
 import 'package:todo_app/2_presentation/pages/create/bloc/create_bloc.dart';
 import 'package:todo_app/2_presentation/pages/detail/bloc/detail_bloc.dart';
 import 'package:todo_app/2_presentation/pages/edit/bloc/edit_bloc.dart';
@@ -16,16 +15,15 @@ Future<void> init() async {
   inj.registerLazySingleton<TodoRemoteDataSource>(() => TodoRemoteDataSourceImpl());
   //repo
   inj.registerLazySingleton<TodoRepo>(() => TodoRepoImpl(todoRemoteDataSource: inj()));
-  //useCase
-  inj.registerLazySingleton<TodoUseCase>(() => TodoUseCase(todoRepo: inj()));
+
   // Create
-  inj.registerFactory(() => CreateBloc(todoUseCase: inj()));
+  inj.registerLazySingleton(() => CreateBloc(todoRepo: inj()));
   // Detail
-  inj.registerFactory(() => DetailBloc(todoUseCase: inj()));
+  inj.registerLazySingleton(() => DetailBloc(todoRepo: inj()));
   // Update
-  inj.registerFactory(() => EditBloc(todoUseCase: inj()));
+  inj.registerLazySingleton(() => EditBloc(todoRepo: inj()));
   // Delete
-  inj.registerFactory(() => DeleteBloc(todoUseCase: inj()));
+  inj.registerLazySingleton(() => DeleteBloc(todoRepo: inj()));
   // Get All
-  inj.registerFactory(() => HomeBloc(todoUseCase: inj()));
+  inj.registerLazySingleton(() => HomeBloc(todoRepo: inj()));
 }
